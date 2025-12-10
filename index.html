@@ -1,0 +1,304 @@
+<!-- 1 -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Derretidos - Experiencias de Chocolate</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <header>
+        <a href="index.html" class="logo">Derretidos</a>
+        <div class="header-actions">
+            <a href="admin.html" class="admin-link">Acceso Admin</a>
+            <button class="cart-btn" onclick="openCart()">
+                <i class="ph ph-shopping-cart" style="font-size: 1.2rem;"></i>
+                <span id="cart-count">0</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Momentos que se Derriten</h1>
+            <p>La experiencia gourmet de fondue de chocolate en la comodidad de tu casa.</p>
+            <button class="btn-primary" onclick="scrollToProducts()">Ver Sets Disponibles</button>
+        </div>
+    </section>
+
+    <!-- VENTAJAS -->
+    <section class="features-section">
+        <div class="container">
+            <h2 class="section-title">¿Por qué Derretidos?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <img id="feature-img-1" src="" alt="Ingredientes" class="feature-img">
+                    <div class="icon-circle"><i class="ph ph-medal"></i></div>
+                    <h3>Ingredientes Premium</h3>
+                    <p>Usamos solo chocolate real de alto porcentaje de cacao y frutas seleccionadas.</p>
+                </div>
+                <div class="feature-card">
+                    <img id="feature-img-2" src="" alt="Proceso" class="feature-img">
+                    <div class="icon-circle"><i class="ph ph-fire"></i></div>
+                    <h3>Baño María Perfecto</h3>
+                    <p>Nuestros hornitos de cerámica mantienen la temperatura ideal sin quemar el chocolate.</p>
+                </div>
+                <div class="feature-card">
+                    <img id="feature-img-3" src="" alt="Experiencia" class="feature-img">
+                    <div class="icon-circle"><i class="ph ph-heart"></i></div>
+                    <h3>Creando Recuerdos</h3>
+                    <p>Más que un postre, es una actividad para desconectarse y disfrutar en pareja o familia.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CLIENTES FELICES -->
+    <section class="testimonials-section">
+        <div class="container">
+            <h2 class="section-title">Clientes Felices</h2>
+            <p style="text-align:center; color:#666; margin-bottom: 2rem;">Así disfrutan sus momentos Derretidos en casa.</p>
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-img-container">
+                        <img id="testi-img-1" src="" alt="Foto Cliente 1" class="testimonial-img">
+                    </div>
+                    <div class="testimonial-content">
+                        <div class="stars">★★★★★</div>
+                        <p class="comment">"¡Increíble experiencia! El chocolate es delicioso y las frutillas estaban súper frescas."</p>
+                        <div class="user-info"><span class="user-name">Camila S.</span><span class="user-location">Santiago</span></div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-img-container">
+                        <img id="testi-img-2" src="" alt="Foto Cliente 2" class="testimonial-img">
+                    </div>
+                    <div class="testimonial-content">
+                        <div class="stars">★★★★★</div>
+                        <p class="comment">"Llegó todo perfecto. El packaging es hermoso, ideal para regalar."</p>
+                        <div class="user-info"><span class="user-name">Felipe M.</span><span class="user-location">Providencia</span></div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-img-container">
+                        <img id="testi-img-3" src="" alt="Foto Cliente 3" class="testimonial-img">
+                    </div>
+                    <div class="testimonial-content">
+                        <div class="stars">★★★★☆</div>
+                        <p class="comment">"Me encantó el detalle del hornito de cerámica, es de muy buena calidad."</p>
+                        <div class="user-info"><span class="user-name">Andrea R.</span><span class="user-location">Las Condes</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- REDES SOCIALES -->
+    <section class="social-section">
+        <div class="container">
+            <h2 class="social-header"><i class="ph ph-instagram-logo brand-insta"></i> Síguenos en Instagram</h2>
+            <div class="social-grid">
+                <div class="social-card" onclick="window.open('https://instagram.com/derretidosstore', '_blank')">
+                    <img id="insta-img-1" src="" class="social-img" alt="Instagram 1">
+                    <div class="social-overlay"><i class="ph ph-instagram-logo social-icon"></i></div>
+                </div>
+                <div class="social-card" onclick="window.open('https://instagram.com/derretidosstore', '_blank')">
+                    <img id="insta-img-2" src="" class="social-img" alt="Instagram 2">
+                    <div class="social-overlay"><i class="ph ph-heart social-icon"></i></div>
+                </div>
+                <div class="social-card" onclick="window.open('https://instagram.com/derretidosstore', '_blank')">
+                    <img id="insta-img-3" src="" class="social-img" alt="Instagram 3">
+                    <div class="social-overlay"><i class="ph ph-chat-circle social-icon"></i></div>
+                </div>
+            </div>
+
+            <h2 class="social-header"><i class="ph ph-tiktok-logo brand-tiktok"></i> En TikTok también antojamos</h2>
+            <div class="social-grid">
+                <div class="social-card tiktok-card" onclick="window.open('https://www.tiktok.com/@derretidos.store', '_blank')">
+                    <img id="tiktok-img-1" src="" class="social-img" alt="TikTok 1">
+                    <video id="tiktok-vid-1" class="social-video" loop muted playsinline preload="none"></video>
+                    <div class="social-overlay"><i class="ph ph-play-circle social-icon"></i></div>
+                </div>
+                <div class="social-card tiktok-card" onclick="window.open('https://www.tiktok.com/@derretidos.store', '_blank')">
+                    <img id="tiktok-img-2" src="" class="social-img" alt="TikTok 2">
+                    <video id="tiktok-vid-2" class="social-video" loop muted playsinline preload="none"></video>
+                    <div class="social-overlay"><i class="ph ph-play-circle social-icon"></i></div>
+                </div>
+                <div class="social-card tiktok-card" onclick="window.open('https://www.tiktok.com/@derretidos.store', '_blank')">
+                    <img id="tiktok-img-3" src="" class="social-img" alt="TikTok 3">
+                    <video id="tiktok-vid-3" class="social-video" loop muted playsinline preload="none"></video>
+                    <div class="social-overlay"><i class="ph ph-play-circle social-icon"></i></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TIENDA -->
+    <div class="container" id="shop-anchor">
+        <h2 class="section-title">Elige tu Momento</h2>
+        <div id="product-list" class="product-grid">
+            <p style="text-align: center; width: 100%;">Preparando el chocolate...</p>
+        </div>
+        <h2 class="section-title" style="margin-top: 4rem;">Agrega Extras</h2>
+        <div id="extra-list" class="product-grid"></div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container" style="text-align: center; padding: 2rem;">
+            <p class="brand-font" style="font-size: 1.5rem; margin-bottom: 1rem;">Derretidos</p>
+            <div style="display: flex; justify-content: center; gap: 1.5rem; margin-bottom: 1.5rem;">
+                <a href="https://instagram.com/derretidosstore" target="_blank" style="color: var(--color-choco); font-size: 2rem;">
+                    <i class="ph ph-instagram-logo"></i>
+                </a>
+                <a href="https://www.tiktok.com/@derretidos.store" target="_blank" style="color: var(--color-choco); font-size: 2rem;">
+                    <i class="ph ph-tiktok-logo"></i>
+                </a>
+            </div>
+            <p>© 2024 Hecho con dulzura.</p>
+        </div>
+    </footer>
+
+    <!-- MODALES -->
+    <div id="product-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal('product-modal')">&times;</button>
+            <div id="modal-body-content" class="product-detail-layout"></div>
+        </div>
+    </div>
+
+    <!-- MODAL CARRITO / CHECKOUT -->
+    <div id="cart-modal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 500px; padding: 2rem;">
+            <button class="close-modal" onclick="closeModal('cart-modal')">&times;</button>
+            <h2 style="margin-bottom: 1.5rem;">Tu Pedido</h2>
+            <div id="cart-items-container" class="cart-items"></div>
+            <div class="cart-total">Total: $<span id="cart-total-amount">0</span></div>
+            <hr style="margin: 1.5rem 0; border-top: 1px solid #eee;">
+            
+            <form id="checkout-form" onsubmit="processOrder(event)">
+                <h3 style="margin-bottom: 1rem;">Datos de Cliente</h3>
+                <div class="form-group">
+                    <label>Nombre</label>
+                    <input type="text" id="cust-name" class="form-control" required placeholder="Tu nombre completo">
+                </div>
+
+                <h3 style="margin-bottom: 1rem; margin-top: 1.5rem;">Tipo de Entrega</h3>
+                
+                <div class="delivery-options">
+                    <label class="delivery-option">
+                        <input type="radio" name="delivery_type" value="retiro" checked onchange="toggleDeliveryFields()">
+                        <div class="option-content">
+                            <span>🏠 Retiro en Peñalolén</span>
+                            <small style="display:block; color:#666; margin-top:4px;">Pillán 6383, Peñalolén</small>
+                            <a href="https://maps.google.com/?q=Pillán+6383,+Peñalolén" target="_blank" class="map-link">
+                                <i class="ph ph-map-pin"></i> Ver en Mapa
+                            </a>
+                        </div>
+                    </label>
+
+                    <label class="delivery-option">
+                        <input type="radio" name="delivery_type" value="envio" onchange="toggleDeliveryFields()">
+                        <div class="option-content">
+                            <span>🛵 Envío o Metro $2000</span>
+                            <small style="color:#666; font-size:0.8rem;">Domicilio en sector Línea 4 o entrega en Metro a convenir.</small>
+                        </div>
+                    </label>
+                </div>
+
+                <!-- INFO DE ENTREGA (Dinámico) -->
+                <div id="shipping-disclaimer" class="disclaimer-box hidden">
+                    <i class="ph ph-info" style="font-size: 1.2rem; flex-shrink: 0;"></i>
+                    <p style="margin:0;">
+                        <strong>Información de Envío:</strong><br>
+                        • <strong>Domicilio:</strong> Solo domicilios cercanos a Línea 4.<br>
+                        • <strong>Resto RM:</strong> Se coordina entrega en estación de Metro a convenir.
+                    </p>
+                </div>
+
+                <!-- CAMPOS DE DIRECCIÓN -->
+                <div id="shipping-fields" class="hidden">
+                    <div class="form-group">
+                        <label>Comuna de Entrega</label>
+                        <select id="cust-commune" class="form-control">
+                            <option value="">Selecciona tu comuna...</option>
+                            
+                            <!-- COMUNAS LINEA 4 (Domicilio) -->
+                            <optgroup label="Reparto a Domicilio (Cercanía Línea 4)">
+                                <option value="Peñalolén">Peñalolén</option>
+                                <option value="La Reina">La Reina</option>
+                                <option value="Ñuñoa">Ñuñoa</option>
+                                <option value="Macul">Macul</option>
+                                <option value="La Florida">La Florida</option>
+                                <option value="Puente Alto">Puente Alto</option>
+                                <option value="Providencia">Providencia</option>
+                                <option value="Las Condes">Las Condes</option>
+                            </optgroup>
+
+                            <!-- OTRAS COMUNAS (Metro) -->
+                            <optgroup label="Coordinar en Metro (Otras Comunas)">
+                                <option value="Santiago">Santiago Centro</option>
+                                <option value="Estación Central">Estación Central</option>
+                                <option value="San Joaquín">San Joaquín</option>
+                                <option value="San Miguel">San Miguel</option>
+                                <option value="La Granja">La Granja</option>
+                                <option value="La Cisterna">La Cisterna</option>
+                                <option value="San Ramón">San Ramón</option>
+                                <option value="La Pintana">La Pintana</option>
+                                <option value="El Bosque">El Bosque</option>
+                                <option value="Pedro Aguirre Cerda">Pedro Aguirre Cerda</option>
+                                <option value="Cerrillos">Cerrillos</option>
+                                <option value="Maipú">Maipú</option>
+                                <option value="Quinta Normal">Quinta Normal</option>
+                                <option value="Lo Prado">Lo Prado</option>
+                                <option value="Pudahuel">Pudahuel</option>
+                                <option value="Cerro Navia">Cerro Navia</option>
+                                <option value="Renca">Renca</option>
+                                <option value="Quilicura">Quilicura</option>
+                                <option value="Conchalí">Conchalí</option>
+                                <option value="Huechuraba">Huechuraba</option>
+                                <option value="Recoleta">Recoleta</option>
+                                <option value="Independencia">Independencia</option>
+                                <option value="Vitacura">Vitacura</option>
+                                <option value="Lo Barnechea">Lo Barnechea</option>
+                                <option value="San Bernardo">San Bernardo</option>
+                                <option value="Lo Espejo">Lo Espejo</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Dirección / Estación de Referencia</label>
+                        <input type="text" id="cust-address" class="form-control" placeholder="Calle y número O Estación de Metro">
+                    </div>
+                </div>
+                
+                <div class="transfer-info">
+                    <strong>Pasos finales:</strong><br>
+                    1. Confirma tu pedido aquí.<br>
+                    2. Serás redirigido a nuestro WhatsApp.<br>
+                    3. Envíanos el comprobante de transferencia por el chat.
+                </div>
+
+                <button type="submit" id="btn-confirm-order" class="btn-whatsapp">
+                    <i class="ph ph-whatsapp-logo" style="font-size: 1.5rem;"></i>
+                    Finalizar en WhatsApp
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script>
+        function scrollToProducts() { document.getElementById('shop-anchor').scrollIntoView({behavior: 'smooth'}); }
+    </script>
+</body>
+</html>

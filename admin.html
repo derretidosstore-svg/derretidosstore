@@ -1,0 +1,167 @@
+<!-- 1 -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Derretidos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+    <!-- VISTA DE LOGIN -->
+    <div id="auth-view" class="login-wrapper">
+        <div class="login-box">
+            <h1 style="color: var(--color-choco); margin-bottom: 2rem;">Derretidos Admin</h1>
+            <form id="login-form" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label style="text-align: left;">Email</label>
+                    <input type="email" id="email" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label style="text-align: left;">Contraseña</label>
+                    <input type="password" id="password" class="form-control" required>
+                </div>
+                <button type="submit" id="btn-login" class="card-btn" style="width: 100%;">Ingresar</button>
+            </form>
+            <p id="login-error" style="color: red; margin-top: 1rem; display: none;"></p>
+        </div>
+    </div>
+
+    <!-- VISTA DASHBOARD -->
+    <div id="dashboard-view" class="hidden">
+        <div class="admin-topbar" style="background: var(--color-choco); color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center;">
+            <span class="brand-font" style="font-size: 1.5rem;">Panel de Control</span>
+            <div style="display: flex; gap: 1rem; align-items: center;">
+                <span id="admin-email-display" style="font-size: 0.9rem; opacity: 0.8;"></span>
+                <button onclick="handleLogout()" class="btn-outline" style="border-color: white; color: white; padding: 0.3rem 0.8rem; font-size: 0.8rem;">Salir</button>
+            </div>
+        </div>
+
+        <div class="container admin-dashboard">
+            <div class="admin-header">
+                <h2>Gestión</h2>
+                <div class="admin-nav">
+                    <button id="btn-tab-products" class="active" onclick="switchAdminTab('products')">Productos</button>
+                    <button id="btn-tab-orders" onclick="switchAdminTab('orders')">Pedidos</button>
+                    <button id="btn-tab-config" onclick="switchAdminTab('config')">Web General</button>
+                    <button id="btn-tab-social" onclick="switchAdminTab('social')">Redes Sociales</button>
+                </div>
+            </div>
+
+            <!-- Tab Productos -->
+            <div id="tab-products">
+                <div class="panel-card" style="background: white; padding: 2rem; border-radius: 12px; margin-bottom: 2rem; box-shadow: var(--shadow);">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <h3 id="form-product-title">+ Nuevo Producto</h3>
+                        <button id="btn-cancel-edit" onclick="resetProductForm()" class="btn-outline hidden" style="width: auto; padding: 0.4rem 1rem; color: #666; border-color: #999;">Cancelar Edición</button>
+                    </div>
+                    
+                    <form id="add-product-form" onsubmit="handleSaveProduct(event)" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
+                        <!-- CAMPO OCULTO PARA ID -->
+                        <input type="hidden" name="product_id" id="product_id">
+
+                        <div class="form-group">
+                            <label>Nombre</label>
+                            <input type="text" name="name" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Precio</label>
+                            <input type="number" name="price" class="form-control" required>
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label>Descripción</label>
+                            <textarea name="description" class="form-control" rows="2" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Tipo</label>
+                            <select name="type" class="form-control">
+                                <option value="main">Set Principal</option>
+                                <option value="extra">Extra</option>
+                            </select>
+                        </div>
+                        
+                        <!-- SECCION MULTI FOTO -->
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label>URLs de Imágenes</label>
+                            <small style="color: #666; display:block; margin-bottom:0.5rem;">La primera será la portada.</small>
+                            
+                            <div id="image-inputs-container">
+                                <!-- Input inicial -->
+                                <div class="image-input-group">
+                                    <input type="url" name="images_url[]" class="form-control" placeholder="https://..." >
+                                </div>
+                            </div>
+                            
+                            <button type="button" onclick="addImageInput()" class="btn-outline" style="width: auto; padding: 0.5rem 1rem; margin-top: 0.5rem; font-size: 0.9rem;">
+                                <i class="ph ph-plus"></i> Añadir otra foto
+                            </button>
+                        </div>
+
+                        <button type="submit" id="btn-submit-product" class="card-btn" style="grid-column: 1 / -1;">Guardar Producto</button>
+                    </form>
+                </div>
+
+                <div class="panel-card" style="background: white; padding: 2rem; border-radius: 12px; box-shadow: var(--shadow);">
+                    <h3>Inventario</h3>
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Img</th>
+                                <th>Nombre</th>
+                                <th>Precio</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-product-table"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tab Pedidos -->
+            <div id="tab-orders" class="hidden">
+                <div style="display: flex; justify-content: flex-end; margin-bottom: 1rem;">
+                    <button onclick="loadOrders()" class="btn-outline">🔄 Actualizar Lista</button>
+                </div>
+                <div class="panel-card" style="background: white; padding: 1rem; border-radius: 12px; box-shadow: var(--shadow);">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>#ID</th>
+                                <th>Cliente</th>
+                                <th>Total</th>
+                                <th>Estado</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-orders-table"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tab Configuración General -->
+            <div id="tab-config" class="hidden">
+                <div class="panel-card" style="background: white; padding: 2rem; border-radius: 12px; box-shadow: var(--shadow);">
+                    <h3>Imágenes Generales del Sitio</h3>
+                    <div id="config-list"></div>
+                </div>
+            </div>
+
+            <!-- Tab Redes Sociales -->
+            <div id="tab-social" class="hidden">
+                <div class="panel-card" style="background: white; padding: 2rem; border-radius: 12px; box-shadow: var(--shadow);">
+                    <h3>Galería de Redes Sociales</h3>
+                    <p style="color: #666; margin-bottom: 1.5rem;">Sube aquí las imágenes cuadradas para tu feed de Instagram y TikTok.</p>
+                    <div id="social-list"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="js/admin.js"></script>
+</body>
+</html>
