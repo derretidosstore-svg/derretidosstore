@@ -275,7 +275,7 @@ async function processOrder(e) {
     message += deliveryMessage;
     message += `\n\n🧾 *Adjunto comprobante:*`;
     
-    const phone = "56912345678"; 
+    const phone = "56975120952"; 
     window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
     
     // Resetear todo
