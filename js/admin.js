@@ -69,6 +69,7 @@ function switchAdminTab(tabName) {
 
     if (tabName === 'products') fetchAdminProducts();
     if (tabName === 'orders') loadOrders();
+    // Cargamos la configuración correspondiente según la pestaña
     if (tabName === 'config') loadConfigRenderer(GENERAL_CONFIG, 'config-list');
     if (tabName === 'social') loadConfigRenderer(SOCIAL_CONFIG, 'social-list');
 }
@@ -113,7 +114,7 @@ async function fetchAdminProducts() {
     });
 }
 
-// NUEVA FUNCIÓN: CARGAR DATOS PARA EDITAR
+// FUNCIÓN: CARGAR DATOS PARA EDITAR
 async function editProduct(id) {
     const { data, error } = await supabaseClient.from('products').select('*').eq('id', id).single();
     if (error) return alert('Error al cargar producto');
@@ -252,6 +253,7 @@ const GENERAL_CONFIG = [
     ]}
 ];
 
+// AQUÍ ESTÁ LA SECCIÓN DE REDES SOCIALES QUE PEDISTE
 const SOCIAL_CONFIG = [
     { title: "Galería Instagram (3 Fotos)", items: [
         { key: 'insta_1', label: 'Post Instagram 1' },
