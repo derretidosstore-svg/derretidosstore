@@ -1,25 +1,24 @@
-/* 1 */
 // --- CONFIGURACIÓN SUPABASE ---
 const SUPABASE_URL = 'https://yilebxkruckgixmzqxbr.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_t8-bNzciqHQx2gNv5BYJDw_6NnERoS2';
+// Asegúrate de que esta sea la 'anon' key. 
+const SUPABASE_KEY = 'sb_publishable_t8-bNzciqHQx2gNv5BYJDw_6NnERoS2'; 
 
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+// FIX: Usamos 'supabaseClient' para evitar conflictos con la variable global 'supabase' de la librería
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // --- CONSTANTES ---
-// Definimos el envío como un producto más para manejarlo fácil en el carrito
 const SHIPPING_PRODUCT = {
     id: 'shipping_fee',
     name: 'Costo de Envío',
     price: 2000,
-    type: 'service', // Identificador para no mostrar foto o tratar distinto
-    image: 'https://cdn-icons-png.flaticon.com/512/759/759238.png' // Icono opcional
+    type: 'service', 
+    image: 'https://cdn-icons-png.flaticon.com/512/759/759238.png'
 };
 
 // --- ESTADO ---
 let cart = [];
 let localProducts = [];
 
-// Lista de comunas con reparto a domicilio (Línea 4 y aledañas)
 const DOMICILIO_COMMUNES = [
     "Peñalolén", "La Reina", "Ñuñoa", "Macul", 
     "La Florida", "Puente Alto", "Providencia", "Las Condes"
@@ -76,7 +75,8 @@ function toggleDeliveryFields() {
 
 // --- CARGAR IMÁGENES DINÁMICAS ---
 async function loadSiteConfigAndImages() {
-    const { data } = await supabase.from('site_config').select('*');
+    // Usamos supabaseClient
+    const { data } = await supabaseClient.from('site_config').select('*');
     if (!data) return;
     const config = {};
     data.forEach(item => { config[item.key] = item.value; });
@@ -117,7 +117,8 @@ function setupVideoHover() {
 async function fetchProducts() {
     const listMain = document.getElementById('product-list');
     const listExtra = document.getElementById('extra-list');
-    const { data, error } = await supabase.from('products').select('*').order('created_at', { ascending: false });
+    // Usamos supabaseClient
+    const { data, error } = await supabaseClient.from('products').select('*').order('created_at', { ascending: false });
 
     if (error) { console.error(error); return; }
     localProducts = data;
@@ -127,12 +128,13 @@ async function fetchProducts() {
 function renderProducts(products) {
     const listMain = document.getElementById('product-list');
     const listExtra = document.getElementById('extra-list');
-    listMain.innerHTML = ''; listExtra.innerHTML = '';
+    if(listMain) listMain.innerHTML = ''; 
+    if(listExtra) listExtra.innerHTML = '';
 
-    if(products.length === 0) listMain.innerHTML = '<p>No hay productos disponibles.</p>';
+    if(products.length === 0 && listMain) listMain.innerHTML = '<p>No hay productos disponibles.</p>';
 
     products.forEach(p => {
-        // Filtramos para que no muestre el producto de envío en el catálogo principal si estuviera en la BD
+        // Filtramos para no mostrar el envío en la grilla principal si llegara a estar en BD
         if (p.id === 'shipping_fee') return;
 
         const mainImg = (p.images && p.images.length > 0) ? p.images[0] : p.image;
@@ -149,8 +151,8 @@ function renderProducts(products) {
                 </div>
             </div>
         `;
-        if(p.type === 'main') listMain.innerHTML += cardHTML;
-        else listExtra.innerHTML += cardHTML;
+        if(p.type === 'main' && listMain) listMain.innerHTML += cardHTML;
+        else if (listExtra) listExtra.innerHTML += cardHTML;
     });
 }
 
@@ -161,7 +163,8 @@ function addToCart(id) {
 }
 
 function updateCartCount() { 
-    document.getElementById('cart-count').innerText = cart.length; 
+    const el = document.getElementById('cart-count');
+    if(el) el.innerText = cart.length; 
 }
 
 function removeFromCart(index) {
@@ -174,9 +177,7 @@ function removeFromCart(index) {
         const retiroRadio = document.querySelector('input[name="delivery_type"][value="retiro"]');
         if (retiroRadio) {
             retiroRadio.checked = true;
-            // Llamamos a toggle para que oculte los campos
-            toggleDeliveryFields(); 
-            // toggleDeliveryFields ya llama a renderCartItems, así que no es necesario llamarlo de nuevo aquí
+            toggleDeliveryFields(); // Esto recalculará y ocultará campos
             return;
         }
     }
@@ -257,7 +258,8 @@ async function processOrder(e) {
         itemCounts[item.name] = (itemCounts[item.name] || 0) + 1;
     });
 
-    const { data, error } = await supabase.from('orders').insert([{
+    // Usamos supabaseClient
+    const { data, error } = await supabaseClient.from('orders').insert([{
         customer_name: name, customer_address: address, customer_commune: commune, total: total, items: itemSummary, status: 'pendiente'
     }]).select();
 
@@ -266,7 +268,6 @@ async function processOrder(e) {
     const orderId = data[0].id;
     let message = `Hola Derretidos! 👋 Soy *${name}*.\nPedido #${orderId}\n\n`;
     
-    // Construimos la lista del mensaje
     for (const [itemName, count] of Object.entries(itemCounts)) { 
         message += `▪️ ${count}x ${itemName}\n`; 
     }
@@ -278,7 +279,6 @@ async function processOrder(e) {
     const phone = "56975120952"; 
     window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
     
-    // Resetear todo
     cart = []; 
     updateCartCount(); 
     closeModal('cart-modal'); 

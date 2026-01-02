@@ -1,13 +1,17 @@
+// --- CONFIGURACIÓN SUPABASE ---
 const SUPABASE_URL = 'https://yilebxkruckgixmzqxbr.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_t8-bNzciqHQx2gNv5BYJDw_6NnERoS2';
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+// FIX: Usamos 'supabaseClient' para evitar conflictos con la variable global 'supabase'
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// --- AUTH LOGIC ---
 document.addEventListener('DOMContentLoaded', async () => {
-    const { data: { session } } = await supabase.auth.getSession();
+    const { data: { session } } = await supabaseClient.auth.getSession();
     if (session) showDashboard(session.user);
     else showLogin();
 
-    supabase.auth.onAuthStateChange((event, session) => {
+    supabaseClient.auth.onAuthStateChange((event, session) => {
         if (session) showDashboard(session.user);
         else showLogin();
     });
@@ -36,7 +40,7 @@ async function handleLogin(e) {
     btn.innerText = "Verificando...";
     errorMsg.style.display = 'none';
 
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
 
     if (error) {
         errorMsg.innerText = "Error: " + error.message;
@@ -46,7 +50,7 @@ async function handleLogin(e) {
     }
 }
 
-async function handleLogout() { await supabase.auth.signOut(); }
+async function handleLogout() { await supabaseClient.auth.signOut(); }
 
 function switchAdminTab(tabName) {
     ['products', 'orders', 'config', 'social'].forEach(tab => {
@@ -69,6 +73,8 @@ function switchAdminTab(tabName) {
     if (tabName === 'social') loadConfigRenderer(SOCIAL_CONFIG, 'social-list');
 }
 
+// --- PRODUCTOS ---
+
 window.addImageInput = function(value = '') {
     const container = document.getElementById('image-inputs-container');
     const div = document.createElement('div');
@@ -85,12 +91,13 @@ async function fetchAdminProducts() {
     if(!tbody) return;
     tbody.innerHTML = '<tr><td colspan="4">Cargando...</td></tr>';
 
-    const { data, error } = await supabase.from('products').select('*').order('created_at', { ascending: false });
+    const { data, error } = await supabaseClient.from('products').select('*').order('created_at', { ascending: false });
 
     if(error) return console.error(error);
     
     tbody.innerHTML = '';
     data.forEach(p => {
+        // Compatibilidad: Usar array 'images' o fallback a 'image' simple
         const mainImage = (p.images && p.images.length > 0) ? p.images[0] : p.image;
         tbody.innerHTML += `
             <tr>
@@ -106,8 +113,9 @@ async function fetchAdminProducts() {
     });
 }
 
+// NUEVA FUNCIÓN: CARGAR DATOS PARA EDITAR
 async function editProduct(id) {
-    const { data, error } = await supabase.from('products').select('*').eq('id', id).single();
+    const { data, error } = await supabaseClient.from('products').select('*').eq('id', id).single();
     if (error) return alert('Error al cargar producto');
 
     const form = document.getElementById('add-product-form');
@@ -174,13 +182,13 @@ async function handleSaveProduct(e) {
     let error;
 
     if (productId) {
-        const { error: updateError } = await supabase
+        const { error: updateError } = await supabaseClient
             .from('products')
             .update(productData)
             .eq('id', productId);
         error = updateError;
     } else {
-        const { error: insertError } = await supabase
+        const { error: insertError } = await supabaseClient
             .from('products')
             .insert([productData]);
         error = insertError;
@@ -197,16 +205,17 @@ async function handleSaveProduct(e) {
 
 async function deleteProduct(id) {
     if(confirm('¿Eliminar producto?')) {
-        await supabase.from('products').delete().eq('id', id);
+        await supabaseClient.from('products').delete().eq('id', id);
         fetchAdminProducts();
     }
 }
 
+// --- PEDIDOS ---
 async function loadOrders() {
     const tbody = document.getElementById('admin-orders-table');
     if(!tbody) return;
     tbody.innerHTML = '<tr><td colspan="5">Cargando...</td></tr>';
-    const { data } = await supabase.from('orders').select('*').order('created_at', { ascending: false });
+    const { data } = await supabaseClient.from('orders').select('*').order('created_at', { ascending: false });
     if(!data) return;
     tbody.innerHTML = '';
     data.forEach(order => {
@@ -222,8 +231,10 @@ async function loadOrders() {
     });
 }
 async function updateOrderStatus(id, status) {
-    await supabase.from('orders').update({ status }).eq('id', id); loadOrders();
+    await supabaseClient.from('orders').update({ status }).eq('id', id); loadOrders();
 }
+
+// --- CONFIGURACIÓN WEB (ESTRUCTURAS) ---
 
 const GENERAL_CONFIG = [
     { title: "Portada Principal", items: [
@@ -261,13 +272,14 @@ const SOCIAL_CONFIG = [
     ]}
 ];
 
+// --- RENDERIZADOR GENÉRICO DE CONFIGURACIÓN ---
 async function loadConfigRenderer(structure, containerId) {
     const container = document.getElementById(containerId);
     if (!container) return;
     
     container.innerHTML = '<p>Cargando configuración...</p>';
 
-    const { data } = await supabase.from('site_config').select('*');
+    const { data } = await supabaseClient.from('site_config').select('*');
     const dbConfig = {};
     if(data) {
         data.forEach(item => { dbConfig[item.key] = item.value; });
@@ -310,7 +322,7 @@ async function loadConfigRenderer(structure, containerId) {
 async function updateConfig(key, label) {
     const val = document.getElementById(`input-${key}`).value;
     
-    const { error } = await supabase
+    const { error } = await supabaseClient
         .from('site_config')
         .upsert({ key: key, value: val, label: label }, { onConflict: 'key' });
 
